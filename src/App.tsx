@@ -1,7 +1,10 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Layout from "./layout/Layout";
-import ProductList from "./Products/ProductList";
-import OrderList from "./Orders/OrderList";
+import { lazy } from "react";
+
+const Layout = lazy(() => import("./layout/Layout"));
+const ProductList = lazy(() => import("./Products/ProductList"));
+const OrderList = lazy(() => import("./Orders/OrderList"));
+const NotFoundPage = lazy(() => import("./components/NotFound"));
 
 let router = createBrowserRouter([
   {
@@ -20,6 +23,10 @@ let router = createBrowserRouter([
       {
         path: "/orders",
         Component: OrderList,
+      },
+      {
+        path: "*",
+        Component: NotFoundPage,
       },
     ],
   },
