@@ -28,7 +28,7 @@ export default function ProductDialog({
   readOnly = false,
 }: ProductDialogProps) {
   const [currentProduct, setCurrentProduct] = useState<
-    Omit<Product, "id"> & { id?: number }
+    Omit<Product, "id"> & { id?: string }
   >({
     name: "",
     category: "",
@@ -40,7 +40,12 @@ export default function ProductDialog({
     if (product) {
       setCurrentProduct(product);
     } else {
-      setCurrentProduct({ name: "", category: "", price: 0 });
+      setCurrentProduct({
+        id: undefined,
+        name: "",
+        category: "",
+        price: 0,
+      });
     }
   }, [product, open]);
 

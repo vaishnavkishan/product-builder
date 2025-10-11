@@ -12,20 +12,28 @@ import {
   IconButton,
   Button,
 } from "@mui/material";
-import { Edit, Visibility } from "@mui/icons-material";
+import { Delete, Edit, Visibility } from "@mui/icons-material";
 import ProductDialog from "./ProductDialog";
-import type { Product } from "../Types/types";
 import ViewProductDialog from "./ViewProductDialog";
-
-const dummyProducts: Product[] = [
-  { id: 1, name: "Laptop", category: "Electronics", price: 70000 },
-  { id: 2, name: "T-Shirt", category: "Clothing", price: 999 },
-  { id: 3, name: "Coffee Mug", category: "Kitchen", price: 299 },
-];
+import type { Product } from "../Types/types";
+import {
+  addProducts,
+  removeProducts,
+  updateProducts,
+} from "../Store/GlobalStore";
+import {
+  useAppDispatch,
+  useAppSelector,
+  type RootState,
+} from "../Store/persistent";
+import { Guid } from "guid-typescript";
 
 export default function ProductList() {
-  const [products, setProducts] = useState<Product[]>(dummyProducts);
+  const products = useAppSelector((state: RootState) => state.global.products);
+  const dispatch = useAppDispatch();
+
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [viewOpen, setViewOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(
     undefined
   );
@@ -37,15 +45,21 @@ export default function ProductList() {
     setDialogOpen(true);
   };
 
+  const handleDelete = (product: Product) => {
+    dispatch(removeProducts([product.id]));
+  };
+  const handleOpenView = (product: Product) => {
+    setSelectedProduct(product);
+  };
+
   const handleSaveProduct = (product: Product) => {
     if (product.id) {
-      setProducts((prev) =>
-        prev.map((p) => (p.id === product.id ? product : p))
-      );
+      dispatch(updateProducts([product])); // update existing product
     } else {
-      const id = products.length > 0 ? products[products.length - 1].id + 1 : 1;
-      setProducts([...products, { ...product, id }]);
+      product.id = Guid.create().toString();
+      dispatch(addProducts([product])); // add new product
     }
+    setDialogOpen(false);
   };
 
   return (
@@ -99,8 +113,12 @@ export default function ProductList() {
                   <IconButton onClick={() => handleOpenDialog(product, false)}>
                     <Edit />
                   </IconButton>
-                  <IconButton onClick={() => setReadOnly(true)}>
+                  <IconButton onClick={() => handleOpenView(product)}>
                     <Visibility />
+                  </IconButton>
+
+                  <IconButton onClick={() => handleDelete(product)}>
+                    <Delete />
                   </IconButton>
                 </TableCell>
               </TableRow>
@@ -109,6 +127,7 @@ export default function ProductList() {
         </Table>
       </TableContainer>
 
+      {/* Edit / Create Dialog */}
       <ProductDialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
@@ -116,9 +135,11 @@ export default function ProductList() {
         product={selectedProduct}
         readOnly={readOnly}
       />
+
+      {/* View Dialog */}
       <ViewProductDialog
-        open={readOnly}
-        onClose={() => setReadOnly(false)}
+        open={viewOpen}
+        onClose={() => setViewOpen(false)}
         product={selectedProduct}
       />
     </Box>

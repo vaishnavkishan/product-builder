@@ -1,13 +1,13 @@
 export interface Product {
-  id: number;
+  id: string;
   name: string;
   category: string;
   price: number;
 }
 
 export interface Order {
-  id: number;
-  productId: number;
+  id: string;
+  productId: string;
   quantity: number;
   client: string;
   country: string;

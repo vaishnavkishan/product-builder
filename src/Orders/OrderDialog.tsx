@@ -34,9 +34,9 @@ export default function OrderDialog({
   products,
 }: OrderDialogProps) {
   const [currentOrder, setCurrentOrder] = useState<
-    Omit<Order, "id"> & { id?: number }
+    Omit<Order, "id"> & { id?: string }
   >({
-    productId: 0,
+    productId: "0",
     quantity: 1,
     client: "",
     country: "",
@@ -53,7 +53,7 @@ export default function OrderDialog({
       const prod = products.find((p) => p.id === order.productId);
       setSelectedProduct(prod);
     } else {
-      setCurrentOrder({ productId: 0, quantity: 1, client: "", country: "" });
+      setCurrentOrder({ productId: "0", quantity: 1, client: "", country: "" });
       setSelectedProduct(undefined);
     }
   }, [order, products, open]);
@@ -64,7 +64,7 @@ export default function OrderDialog({
   ) => {
     setCurrentOrder((prev) => ({ ...prev, [field]: value }));
     if (field === "productId") {
-      const prod = products.find((p) => p.id === Number(value));
+      const prod = products.find((p) => p.id === String(value));
       setSelectedProduct(prod);
     }
   };
@@ -145,15 +145,7 @@ export default function OrderDialog({
 
           {/* Right: Product Info size={{xs:12, md:6}} */}
           <Grid size={{ xs: 12, md: 6 }}>
-            <Box
-              sx={{
-                border: "1px solid #ddd",
-                borderRadius: 1,
-                p: 2,
-                height: "100%",
-                bgcolor: "#f9f9f9",
-              }}
-            >
+            <Box>
               <Typography variant="h6" mb={1}>
                 Product Info
               </Typography>

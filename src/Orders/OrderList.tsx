@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Table,
@@ -13,14 +13,22 @@ import {
   Button,
 } from "@mui/material";
 import { Edit, Visibility } from "@mui/icons-material";
-import type { Order, Product } from "../Types/types";
 import OrderDialog from "./OrderDialog";
+import { addOrders, updateOrders } from "../Store/GlobalStore";
+import type { Order } from "../Types/types";
+import {
+  useAppDispatch,
+  useAppSelector,
+  type RootState,
+} from "../Store/persistent";
 
 export default function OrderList() {
-  const [products] = useState<Product[]>([]);
+  const orders = useAppSelector((state: RootState) => state.global.orders);
+  const products = useAppSelector((state: RootState) => state.global.products);
+  const dispatch = useAppDispatch();
 
-  const [orders, setOrders] = useState<Order[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [viewOpen, setViewOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | undefined>(
     undefined
   );
@@ -32,17 +40,23 @@ export default function OrderList() {
     setDialogOpen(true);
   };
 
+  const handleOpenView = (order: Order) => {
+    setSelectedOrder(order);
+    setViewOpen(true);
+  };
+
   const handleSaveOrder = (order: Order) => {
     if (order.id) {
-      setOrders((prev) => prev.map((o) => (o.id === order.id ? order : o)));
+      dispatch(updateOrders([order])); // update existing order
     } else {
-      const id = orders.length > 0 ? orders[orders.length - 1].id + 1 : 1;
-      setOrders([...orders, { ...order, id }]);
+      dispatch(addOrders([order])); // add new order
     }
+    setDialogOpen(false);
   };
 
   return (
     <Box>
+      {/* Header */}
       <Box
         sx={{
           display: "flex",
@@ -63,6 +77,7 @@ export default function OrderList() {
         </Button>
       </Box>
 
+      {/* Orders Table */}
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -89,7 +104,7 @@ export default function OrderList() {
                     <IconButton onClick={() => handleOpenDialog(order, false)}>
                       <Edit />
                     </IconButton>
-                    <IconButton onClick={() => handleOpenDialog(order, true)}>
+                    <IconButton onClick={() => handleOpenView(order)}>
                       <Visibility />
                     </IconButton>
                   </TableCell>
@@ -100,6 +115,7 @@ export default function OrderList() {
         </Table>
       </TableContainer>
 
+      {/* Create / Edit Order Dialog */}
       <OrderDialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
@@ -108,6 +124,17 @@ export default function OrderList() {
         readOnly={readOnly}
         products={products}
       />
+
+      {/* View Order Dialog */}
+      {selectedOrder && (
+        <OrderDialog
+          open={viewOpen}
+          onClose={() => setViewOpen(false)}
+          order={selectedOrder}
+          readOnly={true}
+          products={products}
+        />
+      )}
     </Box>
   );
 }
