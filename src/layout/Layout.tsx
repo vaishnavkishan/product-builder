@@ -4,8 +4,9 @@ import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import Main from "./Main";
 import Footer from "./Footer";
+import { Outlet } from "react-router-dom";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function Layout() {
   const [open, setOpen] = React.useState(true);
 
   const toggleDrawer = () => setOpen(!open);
@@ -15,7 +16,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <CssBaseline />
       <Navbar onToggleDrawer={toggleDrawer} />
       <Sidebar open={open} />
-      <Main sidebarOpen={open}>{children}</Main>
+      <Main sidebarOpen={open}>
+        <Outlet />
+      </Main>
       <Footer />
     </Box>
   );
