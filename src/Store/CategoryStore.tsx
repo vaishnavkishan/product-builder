@@ -1,4 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import type { RootState } from "./persistent";
 
 export interface Category {
   id: string;
@@ -51,3 +52,8 @@ export const {
   removeCategories,
   updateCategories,
 } = categorySlice.actions;
+
+// Selector factory: returns a selector that finds category name by id from the persisted state
+export const selectCategoryNameById = (id?: string) => (state: RootState) =>
+  state.store.categoryState.categories.find((c) => c.id === id)?.name ??
+  "Unknown";

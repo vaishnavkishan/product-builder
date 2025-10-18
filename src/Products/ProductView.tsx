@@ -1,5 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import type { Product } from "../Types/types";
+import { useAppSelector } from "../Store/persistent";
+import { selectCategoryNameById } from "../Store/CategoryStore";
 
 interface ProductViewProps {
   product?: Product;
@@ -10,6 +12,11 @@ export default function ProductView({
   product,
   compact = false,
 }: ProductViewProps) {
+  // call selector unconditionally (safe to pass undefined)
+  const selectedCategoryName = useAppSelector(
+    selectCategoryNameById(product?.categoryId)
+  );
+
   if (!product) {
     return (
       <Box>
@@ -18,13 +25,14 @@ export default function ProductView({
     );
   }
 
+  const categoryName = selectedCategoryName;
   return (
     <Box sx={{}}>
       <Typography variant={compact ? "subtitle2" : "h6"} gutterBottom>
         {product.name}
       </Typography>
       <Typography variant="body2">
-        <strong>Category:</strong> {product.category}
+        <strong>Category:</strong> {categoryName}
       </Typography>
       <Typography variant="body2">
         <strong>Price:</strong>{" "}
