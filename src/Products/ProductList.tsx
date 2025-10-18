@@ -48,14 +48,13 @@ export default function ProductList() {
   const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(
     undefined
   );
-  const [readOnly, setReadOnly] = useState(false);
+  // readOnly mode removed; view-only uses ViewProductDialog
   const [actionsAnchorEl, setActionsAnchorEl] = useState<null | HTMLElement>(
     null
   );
 
-  const handleOpenDialog = (product?: Product, readonly = false) => {
+  const handleOpenDialog = (product?: Product) => {
     setSelectedProduct(product);
-    setReadOnly(readonly);
     setDialogOpen(true);
   };
 
@@ -144,7 +143,7 @@ export default function ProductList() {
                   <Box sx={{ display: { xs: "none", sm: "inline-flex" } }}>
                     <IconButton
                       color="primary"
-                      onClick={() => handleOpenDialog(product, false)}
+                      onClick={() => handleOpenDialog(product)}
                     >
                       <Edit />
                     </IconButton>
@@ -194,7 +193,6 @@ export default function ProductList() {
         onClose={() => setDialogOpen(false)}
         onSave={handleSaveProduct}
         product={selectedProduct}
-        readOnly={readOnly}
       />
 
       {/* View Dialog */}
@@ -224,7 +222,7 @@ export default function ProductList() {
       >
         <MenuItem
           onClick={() => {
-            if (selectedProduct) handleOpenDialog(selectedProduct, false);
+            if (selectedProduct) handleOpenDialog(selectedProduct);
             setActionsAnchorEl(null);
           }}
           sx={{ color: (theme) => theme.palette.primary.main }}

@@ -17,7 +17,6 @@ interface ProductDialogProps {
   onClose: () => void;
   onSave?: (product: Product) => void; // optional if readonly
   product?: Product;
-  readOnly?: boolean;
 }
 
 export default function ProductDialog({
@@ -25,11 +24,8 @@ export default function ProductDialog({
   onClose,
   onSave,
   product,
-  readOnly = false,
 }: ProductDialogProps) {
-  const categories = useAppSelector(
-    (s) => s.store.categoryState.categories
-  ) as Category[];
+  const categories = useAppSelector((s) => s.store.categoryState.categories);
 
   const [currentProduct, setCurrentProduct] = useState<
     Omit<Product, "id"> & { id?: string }
@@ -62,25 +58,22 @@ export default function ProductDialog({
 
   const handleSave = () => {
     if (!onSave) return;
+    // Simple validation: prevent save when required fields missing
     if (
       !currentProduct.name ||
       !currentProduct.categoryId ||
       currentProduct.price < 0
-    )
+    ) {
+      // noop; UI shows helper text / disabled button
       return;
+    }
     onSave(currentProduct as Product);
     onClose();
   };
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>
-        {readOnly
-          ? "View Product"
-          : product
-          ? "Edit Product"
-          : "Create Product"}
-      </DialogTitle>
+      <DialogTitle>{product ? "Edit Product" : "Create Product"}</DialogTitle>
       <DialogContent
         sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}
       >
@@ -89,7 +82,10 @@ export default function ProductDialog({
           value={currentProduct.name}
           onChange={(e) => handleChange("name", e.target.value)}
           fullWidth
-          InputProps={{ readOnly }}
+          error={!currentProduct.name}
+          helperText={
+            !currentProduct.name ? "Product name is required" : undefined
+          }
         />
         <TextField
           select
@@ -97,7 +93,11 @@ export default function ProductDialog({
           value={currentProduct.categoryId}
           onChange={(e) => handleChange("categoryId", e.target.value)}
           fullWidth
-          SelectProps={{ disabled: readOnly }}
+          SelectProps={{}}
+          error={!currentProduct.categoryId}
+          helperText={
+            !currentProduct.categoryId ? "Please select a category" : undefined
+          }
         >
           {categories.map((cat: Category) => (
             <MenuItem key={cat.id} value={cat.id}>
@@ -111,16 +111,26 @@ export default function ProductDialog({
           value={currentProduct.price}
           onChange={(e) => handleChange("price", Number(e.target.value))}
           fullWidth
-          InputProps={{ readOnly }}
+          error={currentProduct.price < 0}
+          helperText={
+            currentProduct.price < 0 ? "Price must be 0 or greater" : undefined
+          }
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Close</Button>
-        {!readOnly && (
-          <Button variant="contained" onClick={handleSave}>
-            Save
-          </Button>
-        )}
+        <Button onClick={onClose}>Close</Button>(
+        <Button
+          variant="contained"
+          onClick={handleSave}
+          disabled={
+            !currentProduct.name ||
+            !currentProduct.categoryId ||
+            currentProduct.price < 0
+          }
+        >
+          Save
+        </Button>
+        )
       </DialogActions>
     </Dialog>
   );

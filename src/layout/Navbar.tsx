@@ -5,24 +5,12 @@ import {
   IconButton,
   InputBase,
   Box,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  List,
-  ListItemText,
-  ListItemButton,
-  ListItemIcon,
 } from "@mui/material";
 import Logo from "../assets/logo-mark.svg";
-import {
-  Menu as MenuIcon,
-  Search as SearchIcon,
-  Launch,
-  ProductionQuantityLimits,
-} from "@mui/icons-material";
-import { useState } from "react";
+import { Menu as MenuIcon, Search as SearchIcon } from "@mui/icons-material";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "../Store/persistent";
+import SearchDialog from "./SearchDialog";
 
 interface NavbarProps {
   onToggleDrawer: () => void;
@@ -31,13 +19,8 @@ interface NavbarProps {
 export default function Navbar({ onToggleDrawer }: NavbarProps) {
   const [query, setQuery] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
-  const products = useAppSelector((state) => state.store.productState.products);
-
-  // Filter products based on search query
-  const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(query.toLowerCase())
-  );
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
@@ -50,48 +33,31 @@ export default function Navbar({ onToggleDrawer }: NavbarProps) {
     void navigate(`/products/${productId}`);
   };
 
+  useEffect(() => {
+    if (searchOpen) setTimeout(() => inputRef.current?.focus(), 0);
+  }, [searchOpen]);
+
   return (
     <>
       <Box>
         <AppBar position="fixed" sx={{ zIndex: 1201 }}>
           <Toolbar>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={onToggleDrawer}
-              sx={{}}
-            >
+            <IconButton edge="start" color="inherit" onClick={onToggleDrawer}>
               <MenuIcon />
             </IconButton>
 
-            {/* Logo (visible on xs) + App Name (hide on xs) */}
             <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Box
-                component="img"
-                src={Logo}
-                alt="VaiKi"
-                sx={{
-                  height: 36,
-                  display: { xs: "inline-block", sm: "inline-block" },
-                }}
-              />
+              <Box component="img" src={Logo} alt="VaiKi" sx={{ height: 36 }} />
               <Typography
                 variant="h6"
-                sx={{
-                  flexGrow: 0,
-                  display: { xs: "none", sm: "block" },
-                  ml: 1,
-                  mr: 1,
-                }}
+                sx={{ display: { xs: "none", sm: "block" }, ml: 1, mr: 1 }}
               >
                 VaiKi Product Builder
               </Typography>
             </Box>
 
-            {/* spacer pushes the following items to the right */}
             <Box sx={{ flexGrow: 1 }} />
 
-            {/* Search Bar (full on sm+, icon-only on xs) - at the rightmost side */}
             <Box
               sx={{
                 display: { xs: "none", sm: "flex" },
@@ -112,7 +78,6 @@ export default function Navbar({ onToggleDrawer }: NavbarProps) {
               />
             </Box>
 
-            {/* Search icon button for xs screens */}
             <IconButton
               color="inherit"
               aria-label="open search"
@@ -124,52 +89,14 @@ export default function Navbar({ onToggleDrawer }: NavbarProps) {
           </Toolbar>
         </AppBar>
 
-        {/* Search Results Dialog */}
-        <Dialog
+        <SearchDialog
           open={searchOpen}
           onClose={() => setSearchOpen(false)}
-          fullWidth
-          maxWidth="sm"
-        >
-          <DialogTitle>Search Results</DialogTitle>
-          <DialogContent>
-            {query ? (
-              filteredProducts.length > 0 ? (
-                <List>
-                  {filteredProducts.map((product) => (
-                    <ListItemButton
-                      key={product.id}
-                      onClick={() => handleProductClick(product.id)}
-                    >
-                      <ListItemIcon>
-                        <Launch />
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={product.name}
-                        secondary={`₹${product.price}`}
-                      />
-                    </ListItemButton>
-                  ))}
-                </List>
-              ) : (
-                <Box sx={{ py: 2, textAlign: "center" }}>
-                  <ProductionQuantityLimits
-                    sx={{ fontSize: 48, color: "text.disabled" }}
-                  />
-                  <Typography color="text.secondary" sx={{ mt: 1 }}>
-                    No products found matching "{query}"
-                  </Typography>
-                </Box>
-              )
-            ) : (
-              <Box sx={{ py: 2, textAlign: "center" }}>
-                <Typography color="text.secondary">
-                  Start typing to search products
-                </Typography>
-              </Box>
-            )}
-          </DialogContent>
-        </Dialog>
+          query={query}
+          onQueryChange={handleSearch}
+          onProductClick={handleProductClick}
+          inputRef={inputRef}
+        />
       </Box>
     </>
   );

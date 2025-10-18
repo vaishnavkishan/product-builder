@@ -187,7 +187,7 @@ export default function AppBarExample({ onDrawerButtonClick }: Props) {
                     },
                   },
                 }}
-                inputProps={{ "aria-label": "search" }}
+                slotProps={{ input: { "aria-label": "search" } }}
               />
             </Box>
             <Box sx={{ flexGrow: 1 }} />

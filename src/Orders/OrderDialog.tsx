@@ -115,7 +115,7 @@ export default function OrderDialog({
               type="number"
               value={currentOrder.quantity}
               onChange={(e) => handleChange("quantity", Number(e.target.value))}
-              InputProps={{ readOnly }}
+              slotProps={{ input: { readOnly } }}
               fullWidth
               disabled={readOnly}
             />
@@ -124,7 +124,7 @@ export default function OrderDialog({
               value={currentOrder.client}
               onChange={(e) => handleChange("client", e.target.value)}
               fullWidth
-              InputProps={{ readOnly }}
+              slotProps={{ input: { readOnly } }}
               disabled={readOnly}
             />
             <TextField
