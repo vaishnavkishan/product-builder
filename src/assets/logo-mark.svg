@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-labelledby="logoMarkTitle" role="img">
+  <title id="logoMarkTitle">VaiKi Product Builder logo mark</title>
+  <!-- Circular mark with stylized V and shopping cart handle -->
+  <defs>
+    <linearGradient id="g" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#1aa270" />
+      <stop offset="100%" stop-color="#005b30" />
+    </linearGradient>
+  </defs>
+
+  <rect width="64" height="64" rx="12" fill="#1e1e1e" />
+
+  <g transform="translate(8,8)">
+    <circle cx="24" cy="24" r="24" fill="url(#g)" />
+
+    <!-- stylized V -->
+    <path d="M14 20 L22 34 L30 20" stroke="#e6e6e7" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+
+    <!-- small cart handle to hint product builder -->
+    <path d="M31 14 L36 14 L38 22" stroke="#e6e6e7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+  </g>
+</svg>

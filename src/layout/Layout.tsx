@@ -1,15 +1,21 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { Box, CssBaseline } from "@mui/material";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import Main from "./Main";
 import Footer from "./Footer";
 import { Outlet } from "react-router-dom";
+import useDeviceType from "../hooks/useDeviceType";
 
 export default function Layout() {
-  const [open, setOpen] = React.useState(true);
+  const { isDesktop } = useDeviceType();
 
-  const toggleDrawer = () => setOpen(!open);
+  // default open on desktop, closed on mobile/tablet
+  const defaultOpen = useMemo(() => (isDesktop ? true : false), [isDesktop]);
+
+  const [open, setOpen] = useState<boolean>(defaultOpen);
+
+  const toggleDrawer = () => setOpen((s) => !s);
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh", flexDirection: "column" }}>

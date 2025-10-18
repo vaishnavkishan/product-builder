@@ -2,7 +2,7 @@
 
 Application to build products.
 
-Developed using:
+Access from [VaiKi](https://stproductbuilderreact.z13.web.core.windows.net/)
 
 ## Tools used
 
@@ -11,6 +11,7 @@ Developed using:
 1. Redux
    - Redux Persistence
    - IndexedDB browser API
+1. Azure Storage - Static sites
 
 ## Features
 

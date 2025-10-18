@@ -1,4 +1,4 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import {
   FLUSH,
   PAUSE,
@@ -12,6 +12,7 @@ import {
 import createIndexedDBStorage from "redux-persist-indexeddb-storage";
 import { globalSlice } from "./GlobalStore";
 import { useDispatch, useSelector } from "react-redux";
+import { productSlice } from "./ProductStore";
 
 const indexedDBStorage = createIndexedDBStorage({
   name: "myAppDB",
@@ -24,13 +25,16 @@ const persistConfigIndexedDB = {
   storage: indexedDBStorage,
 };
 
-export const rootReducer = globalSlice.reducer;
+export const rootReducer = combineReducers({
+  globalState: globalSlice.reducer,
+  productState: productSlice.reducer,
+});
 
 const persistedReducer = persistReducer(persistConfigIndexedDB, rootReducer);
 
 const store = configureStore({
   reducer: {
-    global: persistedReducer,
+    store: persistedReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

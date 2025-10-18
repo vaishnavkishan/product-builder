@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="280" height="64" viewBox="0 0 280 64" role="img" aria-labelledby="logoTitle">
+  <title id="logoTitle">VaiKi Product Builder</title>
+  <defs>
+    <linearGradient id="g2" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#1aa270" />
+      <stop offset="100%" stop-color="#005b30" />
+    </linearGradient>
+  </defs>
+
+  <!-- background is transparent so it can be used on dark or light surfaces -->
+
+  <!-- Mark (left) -->
+  <g transform="translate(8,8)">
+    <circle cx="24" cy="24" r="24" fill="url(#g2)" />
+    <path d="M14 20 L22 34 L30 20" stroke="#e6e6e7" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+    <path d="M31 14 L36 14 L38 22" stroke="#e6e6e7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+  </g>
+
+  <!-- Wordmark -->
+  <g transform="translate(72,20)">
+    <text x="0" y="0" font-family="Roboto, Roboto Condensed, Arial, sans-serif" font-size="18" fill="#e6e6e7" font-weight="600">VaiKi</text>
+    <text x="0" y="22" font-family="Roboto, Roboto Condensed, Arial, sans-serif" font-size="12" fill="#bdbdbd">Product Builder</text>
+  </g>
+</svg>

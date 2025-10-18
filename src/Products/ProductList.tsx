@@ -11,25 +11,29 @@ import {
   Typography,
   IconButton,
   Button,
+  Menu,
+  MenuItem,
 } from "@mui/material";
-import { Delete, Edit, Visibility } from "@mui/icons-material";
+import { Delete, Edit, Visibility, MoreVert } from "@mui/icons-material";
 import ProductDialog from "./ProductDialog";
 import ViewProductDialog from "./ViewProductDialog";
 import type { Product } from "../Types/types";
-import {
-  addProducts,
-  removeProducts,
-  updateProducts,
-} from "../Store/GlobalStore";
 import {
   useAppDispatch,
   useAppSelector,
   type RootState,
 } from "../Store/persistent";
 import { Guid } from "guid-typescript";
+import {
+  addProducts,
+  removeProducts,
+  updateProducts,
+} from "../Store/ProductStore";
 
 export default function ProductList() {
-  const products = useAppSelector((state: RootState) => state.global.products);
+  const products = useAppSelector(
+    (state: RootState) => state.store.productState.products
+  );
   const dispatch = useAppDispatch();
 
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -38,6 +42,9 @@ export default function ProductList() {
     undefined
   );
   const [readOnly, setReadOnly] = useState(false);
+  const [actionsAnchorEl, setActionsAnchorEl] = useState<null | HTMLElement>(
+    null
+  );
 
   const handleOpenDialog = (product?: Product, readonly = false) => {
     setSelectedProduct(product);
@@ -50,6 +57,15 @@ export default function ProductList() {
   };
   const handleOpenView = (product: Product) => {
     setSelectedProduct(product);
+    setViewOpen(true);
+  };
+
+  const handleOpenActions = (
+    event: React.MouseEvent<HTMLElement>,
+    product: Product
+  ) => {
+    setSelectedProduct(product);
+    setActionsAnchorEl(event.currentTarget);
   };
 
   const handleSaveProduct = (product: Product) => {
@@ -90,7 +106,6 @@ export default function ProductList() {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Category</TableCell>
               <TableCell align="right">Price (₹)</TableCell>
@@ -100,7 +115,6 @@ export default function ProductList() {
           <TableBody>
             {products.map((product) => (
               <TableRow key={product.id}>
-                <TableCell>{product.id}</TableCell>
                 <TableCell>{product.name}</TableCell>
                 <TableCell>{product.category}</TableCell>
                 <TableCell
@@ -110,16 +124,34 @@ export default function ProductList() {
                   {product.price}
                 </TableCell>
                 <TableCell align="center">
-                  <IconButton onClick={() => handleOpenDialog(product, false)}>
-                    <Edit />
-                  </IconButton>
-                  <IconButton onClick={() => handleOpenView(product)}>
-                    <Visibility />
-                  </IconButton>
+                  {/* full action buttons visible on sm+ */}
+                  <Box sx={{ display: { xs: "none", sm: "inline-flex" } }}>
+                    <IconButton
+                      onClick={() => handleOpenDialog(product, false)}
+                    >
+                      <Edit />
+                    </IconButton>
+                    <IconButton onClick={() => handleOpenView(product)}>
+                      <Visibility />
+                    </IconButton>
+                    <IconButton onClick={() => handleDelete(product)}>
+                      <Delete />
+                    </IconButton>
+                  </Box>
 
-                  <IconButton onClick={() => handleDelete(product)}>
-                    <Delete />
-                  </IconButton>
+                  {/* compact actions for xs: one button opens menu */}
+                  <Box sx={{ display: { xs: "inline-flex", sm: "none" } }}>
+                    <IconButton
+                      aria-label="more"
+                      aria-controls={
+                        actionsAnchorEl ? "actions-menu" : undefined
+                      }
+                      aria-haspopup="true"
+                      onClick={(e) => handleOpenActions(e, product)}
+                    >
+                      <MoreVert />
+                    </IconButton>
+                  </Box>
                 </TableCell>
               </TableRow>
             ))}
@@ -142,6 +174,50 @@ export default function ProductList() {
         onClose={() => setViewOpen(false)}
         product={selectedProduct}
       />
+
+      {/* Actions menu for xs screens */}
+      <Menu
+        id="actions-menu"
+        anchorEl={actionsAnchorEl}
+        open={Boolean(actionsAnchorEl)}
+        onClose={() => setActionsAnchorEl(null)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        PaperProps={{
+          sx: {
+            bgcolor: "background.default",
+            color: "text.primary",
+            // slightly higher elevation so it sits above table paper
+            boxShadow: (theme) => theme.shadows[8],
+            minWidth: 140,
+          },
+        }}
+      >
+        <MenuItem
+          onClick={() => {
+            if (selectedProduct) handleOpenDialog(selectedProduct, false);
+            setActionsAnchorEl(null);
+          }}
+        >
+          Edit
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            if (selectedProduct) handleOpenView(selectedProduct);
+            setActionsAnchorEl(null);
+          }}
+        >
+          View
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            if (selectedProduct) handleDelete(selectedProduct);
+            setActionsAnchorEl(null);
+          }}
+        >
+          Delete
+        </MenuItem>
+      </Menu>
     </Box>
   );
 }
