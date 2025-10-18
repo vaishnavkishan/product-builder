@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import ViewProductDialog from "./ViewProductDialog";
 import {
   Box,
   Table,
@@ -14,9 +16,15 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-import { Delete, Edit, Visibility, MoreVert } from "@mui/icons-material";
+import {
+  Delete,
+  Edit,
+  RemoveRedEye,
+  Launch,
+  MoreVert,
+} from "@mui/icons-material";
 import ProductDialog from "./ProductDialog";
-import ViewProductDialog from "./ViewProductDialog";
+
 import type { Product } from "../Types/types";
 import type { Category } from "../Store/CategoryStore";
 import { useAppDispatch, useAppSelector } from "../Store/persistent";
@@ -33,6 +41,7 @@ export default function ProductList() {
     (state) => state.store.categoryState.categories
   );
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [viewOpen, setViewOpen] = useState(false);
@@ -53,9 +62,15 @@ export default function ProductList() {
   const handleDelete = (product: Product) => {
     dispatch(removeProducts([product.id]));
   };
-  const handleOpenView = (product: Product) => {
+  // Handler for dialog view only
+  const handleViewProduct = (product: Product) => {
     setSelectedProduct(product);
     setViewOpen(true);
+  };
+
+  // Handler for navigating to product page
+  const handleNavigateToProduct = (product: Product) => {
+    void navigate(`/products/${product.id}`);
   };
 
   const handleOpenActions = (
@@ -128,14 +143,27 @@ export default function ProductList() {
                   {/* full action buttons visible on sm+ */}
                   <Box sx={{ display: { xs: "none", sm: "inline-flex" } }}>
                     <IconButton
+                      color="primary"
                       onClick={() => handleOpenDialog(product, false)}
                     >
                       <Edit />
                     </IconButton>
-                    <IconButton onClick={() => handleOpenView(product)}>
-                      <Visibility />
+                    <IconButton
+                      color="primary"
+                      onClick={() => handleViewProduct(product)}
+                    >
+                      <RemoveRedEye />
                     </IconButton>
-                    <IconButton onClick={() => handleDelete(product)}>
+                    <IconButton
+                      color="primary"
+                      onClick={() => handleNavigateToProduct(product)}
+                    >
+                      <Launch />
+                    </IconButton>
+                    <IconButton
+                      color="error"
+                      onClick={() => handleDelete(product)}
+                    >
                       <Delete />
                     </IconButton>
                   </Box>
@@ -199,24 +227,36 @@ export default function ProductList() {
             if (selectedProduct) handleOpenDialog(selectedProduct, false);
             setActionsAnchorEl(null);
           }}
+          sx={{ color: (theme) => theme.palette.primary.main }}
         >
-          Edit
+          <Edit sx={{ mr: 1 }} /> Edit
         </MenuItem>
         <MenuItem
           onClick={() => {
-            if (selectedProduct) handleOpenView(selectedProduct);
+            if (selectedProduct) handleViewProduct(selectedProduct);
             setActionsAnchorEl(null);
           }}
+          sx={{ color: (theme) => theme.palette.info.main }}
         >
-          View
+          <RemoveRedEye sx={{ mr: 1 }} /> Quick View
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            if (selectedProduct) handleNavigateToProduct(selectedProduct);
+            setActionsAnchorEl(null);
+          }}
+          sx={{ color: (theme) => theme.palette.secondary.main }}
+        >
+          <Launch sx={{ mr: 1 }} /> Open Page
         </MenuItem>
         <MenuItem
           onClick={() => {
             if (selectedProduct) handleDelete(selectedProduct);
             setActionsAnchorEl(null);
           }}
+          sx={{ color: (theme) => theme.palette.error.main }}
         >
-          Delete
+          <Delete sx={{ mr: 1 }} /> Delete
         </MenuItem>
       </Menu>
     </Box>

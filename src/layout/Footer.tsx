@@ -12,7 +12,7 @@ export default function Footer() {
       }}
     >
       <Typography variant="body2">
-        Made with ❤️ by Kishan Vaishnav
+        Made 👨🏽‍💻 by Kishan Vaishnav
         {" • "}
         <Link
           href="https://github.com/vaishnavkishan"

@@ -1,5 +1,6 @@
 // Loader.tsx
 import { Box, CircularProgress, Typography } from "@mui/material";
+import Logo from "../assets/logo-mark.svg";
 
 export default function Loader() {
   return (
@@ -13,8 +14,13 @@ export default function Loader() {
         bgcolor: "#121212",
       }}
     >
-      {/* Replace with your logo */}
-      <img src="/vite.svg" alt="App Logo" width={120} height={120} />
+      {/* Application logo */}
+      <img
+        src={Logo}
+        alt="VaiKi Product Builder Logo"
+        width={120}
+        height={120}
+      />
       <Typography variant="h6" sx={{ mt: 2, color: "gray" }}>
         Loading...
       </Typography>

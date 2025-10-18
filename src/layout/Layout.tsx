@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import { useState, useMemo } from "react";
 import { Box, CssBaseline } from "@mui/material";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
@@ -11,7 +11,7 @@ export default function Layout() {
   const { isDesktop, isMobile } = useDeviceType();
 
   // default open on desktop, closed on mobile/tablet
-  const defaultOpen = useMemo(() => (isDesktop ? true : false), [isDesktop]);
+  const defaultOpen = useMemo(() => isDesktop, [isDesktop]);
 
   const [open, setOpen] = useState<boolean>(defaultOpen);
 

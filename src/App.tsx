@@ -5,6 +5,7 @@ const Layout = lazy(() => import("./layout/Layout"));
 const ProductList = lazy(() => import("./Products/ProductList"));
 const OrderList = lazy(() => import("./Orders/OrderList"));
 const CategoryList = lazy(() => import("./Categories/CategoryList"));
+const ProductViewPage = lazy(() => import("./Products/ProductViewPage"));
 const NotFoundPage = lazy(() => import("./components/NotFound"));
 
 const router = createBrowserRouter([
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
       {
         path: "/products",
         Component: ProductList,
+      },
+      {
+        path: "/products/:id",
+        Component: ProductViewPage,
       },
       {
         path: "/orders",
