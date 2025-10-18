@@ -12,6 +12,7 @@ Access from [VaiKi](https://stproductbuilderreact.z13.web.core.windows.net/)
    - Redux Persistence
    - IndexedDB browser API
 1. Azure Storage - Static sites
+1. React Window for showing long lists
 
 ## Features
 
@@ -26,6 +27,8 @@ Access from [VaiKi](https://stproductbuilderreact.z13.web.core.windows.net/)
 1. In memory state management using `Redux`.
 1. Persisting state in Browser's IndexedDB using `Redux Persist` and `redux-persist-indexeddb-storage`.
 1. Lazy loading components using `lazy`.
+1. Use debouncing method from `lodash`
+1. Implemented perfor
 
 ## Deployment
 

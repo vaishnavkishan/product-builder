@@ -3,7 +3,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  List,
+  ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
@@ -14,6 +14,8 @@ import { Launch, ProductionQuantityLimits } from "@mui/icons-material";
 import React, { useCallback, useMemo } from "react";
 import { useAppSelector } from "../Store/persistent";
 import { debounce } from "lodash";
+import { List as FixedSizeList, type RowComponentProps } from "react-window";
+import type { Product } from "../Types/types";
 
 interface SearchDialogProps {
   open: boolean;
@@ -47,7 +49,7 @@ export default function SearchDialog({
     [products]
   );
 
-  const debouncedSearch = useMemo(() => debounce(search, 300), [search]);
+  const debouncedSearch = useMemo(() => debounce(search, 100), [search]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -73,22 +75,7 @@ export default function SearchDialog({
 
         {query ? (
           filteredProducts.length > 0 ? (
-            <List>
-              {filteredProducts.map((product) => (
-                <ListItemButton
-                  key={product.id}
-                  onClick={() => onProductClick(product.id)}
-                >
-                  <ListItemIcon>
-                    <Launch />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={product.name}
-                    secondary={`₹${product.price}`}
-                  />
-                </ListItemButton>
-              ))}
-            </List>
+            renderList(filteredProducts, onProductClick)
           ) : (
             <Box sx={{ py: 2, textAlign: "center" }}>
               <ProductionQuantityLimits
@@ -108,5 +95,48 @@ export default function SearchDialog({
         )}
       </DialogContent>
     </Dialog>
+  );
+}
+function renderList(products: Product[], onProductClick: (id: string) => void) {
+  return (
+    <Box
+      sx={{
+        width: "100%",
+        height: 400,
+        bgcolor: "background.paper",
+      }}
+    >
+      <FixedSizeList
+        rowComponent={RowComponent}
+        rowCount={products.length}
+        rowHeight={60} // <-- big enough for icon + text
+        rowProps={{ products, onProductClick }}
+      />
+    </Box>
+  );
+}
+
+function RowComponent({
+  index,
+  style,
+  products,
+  onProductClick,
+}: RowComponentProps<{
+  products: Product[];
+  onProductClick: (id: string) => void;
+}>) {
+  console.log(products, products[index]);
+  return (
+    <ListItem style={style} key={index} component="div" disablePadding>
+      <ListItemButton onClick={() => onProductClick(products[index].id)}>
+        <ListItemIcon>
+          <Launch />
+        </ListItemIcon>
+        <ListItemText
+          primary={products[index].name}
+          secondary={products[index].price}
+        />
+      </ListItemButton>
+    </ListItem>
   );
 }

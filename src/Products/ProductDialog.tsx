@@ -118,7 +118,7 @@ export default function ProductDialog({
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Close</Button>(
+        <Button onClick={onClose}>Close</Button>
         <Button
           variant="contained"
           onClick={handleSave}
@@ -130,7 +130,6 @@ export default function ProductDialog({
         >
           Save
         </Button>
-        )
       </DialogActions>
     </Dialog>
   );
