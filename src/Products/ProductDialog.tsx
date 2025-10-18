@@ -9,6 +9,8 @@ import {
   Button,
 } from "@mui/material";
 import type { Product } from "../Types/types";
+import { useAppSelector } from "../Store/persistent";
+import type { Category } from "../Store/CategoryStore";
 
 interface ProductDialogProps {
   open: boolean;
@@ -18,8 +20,6 @@ interface ProductDialogProps {
   readOnly?: boolean;
 }
 
-const categories = ["Electronics", "Clothing", "Kitchen", "Books"];
-
 export default function ProductDialog({
   open,
   onClose,
@@ -27,11 +27,15 @@ export default function ProductDialog({
   product,
   readOnly = false,
 }: ProductDialogProps) {
+  const categories = useAppSelector(
+    (s) => s.store.categoryState.categories
+  ) as Category[];
+
   const [currentProduct, setCurrentProduct] = useState<
     Omit<Product, "id"> & { id?: string }
   >({
     name: "",
-    category: "",
+    categoryId: "",
     price: 0,
     id: undefined,
   });
@@ -43,7 +47,7 @@ export default function ProductDialog({
       setCurrentProduct({
         id: undefined,
         name: "",
-        category: "",
+        categoryId: "",
         price: 0,
       });
     }
@@ -60,7 +64,7 @@ export default function ProductDialog({
     if (!onSave) return;
     if (
       !currentProduct.name ||
-      !currentProduct.category ||
+      !currentProduct.categoryId ||
       currentProduct.price < 0
     )
       return;
@@ -90,14 +94,14 @@ export default function ProductDialog({
         <TextField
           select
           label="Category"
-          value={currentProduct.category}
-          onChange={(e) => handleChange("category", e.target.value)}
+          value={currentProduct.categoryId}
+          onChange={(e) => handleChange("categoryId", e.target.value)}
           fullWidth
           SelectProps={{ disabled: readOnly }}
         >
-          {categories.map((cat) => (
-            <MenuItem key={cat} value={cat}>
-              {cat}
+          {categories.map((cat: Category) => (
+            <MenuItem key={cat.id} value={cat.id}>
+              {cat.name}
             </MenuItem>
           ))}
         </TextField>

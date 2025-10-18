@@ -16,15 +16,11 @@ import { Edit, Visibility } from "@mui/icons-material";
 import OrderDialog from "./OrderDialog";
 import { addOrders, updateOrders } from "../Store/GlobalStore";
 import type { Order } from "../Types/types";
-import {
-  useAppDispatch,
-  useAppSelector,
-  type RootState,
-} from "../Store/persistent";
+import { useAppDispatch, useAppSelector } from "../Store/persistent";
 
 export default function OrderList() {
-  const orders = useAppSelector((state: RootState) => state.global.orders);
-  const products = useAppSelector((state: RootState) => state.global.products);
+  const orders = useAppSelector((s) => s.store.globalState.orders);
+  const products = useAppSelector((s) => s.store.productState.products);
   const dispatch = useAppDispatch();
 
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -96,7 +92,7 @@ export default function OrderList() {
               return (
                 <TableRow key={order.id}>
                   <TableCell>{order.id}</TableCell>
-                  <TableCell>{product?.name || "Unknown"}</TableCell>
+                  <TableCell>{product?.name ?? "Unknown"}</TableCell>
                   <TableCell>{order.client}</TableCell>
                   <TableCell>{order.quantity}</TableCell>
                   <TableCell>{order.country}</TableCell>

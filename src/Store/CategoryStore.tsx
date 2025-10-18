@@ -1,4 +1,3 @@
-import { Guid } from "guid-typescript";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 export interface Category {
@@ -7,11 +6,18 @@ export interface Category {
   description?: string;
 }
 
+// Deterministic seeded categories so sample products can reference them
+export const CATEGORY_IDS = {
+  Electronics: "cat-electronics",
+  Clothing: "cat-clothing",
+  Kitchen: "cat-kitchen",
+} as const;
+
 const initialState = {
   categories: [
-    { id: Guid.create().toString(), name: "Electronics" },
-    { id: Guid.create().toString(), name: "Clothing" },
-    { id: Guid.create().toString(), name: "Kitchen" },
+    { id: CATEGORY_IDS.Electronics, name: "Electronics" },
+    { id: CATEGORY_IDS.Clothing, name: "Clothing" },
+    { id: CATEGORY_IDS.Kitchen, name: "Kitchen" },
   ] as Category[],
 };
 

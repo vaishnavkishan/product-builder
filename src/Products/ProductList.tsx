@@ -18,11 +18,8 @@ import { Delete, Edit, Visibility, MoreVert } from "@mui/icons-material";
 import ProductDialog from "./ProductDialog";
 import ViewProductDialog from "./ViewProductDialog";
 import type { Product } from "../Types/types";
-import {
-  useAppDispatch,
-  useAppSelector,
-  type RootState,
-} from "../Store/persistent";
+import type { Category } from "../Store/CategoryStore";
+import { useAppDispatch, useAppSelector } from "../Store/persistent";
 import { Guid } from "guid-typescript";
 import {
   addProducts,
@@ -31,8 +28,9 @@ import {
 } from "../Store/ProductStore";
 
 export default function ProductList() {
-  const products = useAppSelector(
-    (state: RootState) => state.store.productState.products
+  const products = useAppSelector((state) => state.store.productState.products);
+  const categories = useAppSelector(
+    (state) => state.store.categoryState.categories
   );
   const dispatch = useAppDispatch();
 
@@ -113,10 +111,13 @@ export default function ProductList() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {products.map((product) => (
+            {products.map((product: Product) => (
               <TableRow key={product.id}>
                 <TableCell>{product.name}</TableCell>
-                <TableCell>{product.category}</TableCell>
+                <TableCell>
+                  {categories.find((c: Category) => c.id === product.categoryId)
+                    ?.name ?? "Unknown"}
+                </TableCell>
                 <TableCell
                   align="right"
                   sx={{ fontFamily: "Eczar, serif", fontWeight: 300 }}

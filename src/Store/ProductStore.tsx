@@ -1,25 +1,25 @@
-import { Guid } from "guid-typescript";
 import type { Product } from "../Types/types";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { CATEGORY_IDS } from "./CategoryStore";
 
 const initialState = {
   products: [
     {
-      id: Guid.create().toString(),
+      id: "prod-1",
       name: "Laptop",
-      category: "Electronics",
+      categoryId: CATEGORY_IDS.Electronics,
       price: 70000,
     },
     {
-      id: Guid.create().toString(),
+      id: "prod-2",
       name: "T-Shirt",
-      category: "Clothing",
+      categoryId: CATEGORY_IDS.Clothing,
       price: 999,
     },
     {
-      id: Guid.create().toString(),
+      id: "prod-3",
       name: "Coffee Mug",
-      category: "Kitchen",
+      categoryId: CATEGORY_IDS.Kitchen,
       price: 299,
     },
   ] as Product[],
