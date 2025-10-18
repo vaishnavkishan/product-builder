@@ -13,6 +13,7 @@ import createIndexedDBStorage from "redux-persist-indexeddb-storage";
 import { globalSlice } from "./GlobalStore";
 import { useDispatch, useSelector } from "react-redux";
 import { productSlice } from "./ProductStore";
+import { categorySlice } from "./CategoryStore";
 
 const indexedDBStorage = createIndexedDBStorage({
   name: "myAppDB",
@@ -28,6 +29,7 @@ const persistConfigIndexedDB = {
 export const rootReducer = combineReducers({
   globalState: globalSlice.reducer,
   productState: productSlice.reducer,
+  categoryState: categorySlice.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfigIndexedDB, rootReducer);

@@ -15,7 +15,7 @@ export default function Main({ children, sidebarOpen }: MainProps) {
         flexGrow: 1,
         p: 3,
         mt: "64px", // space for AppBar
-        ml: sidebarOpen ? `${drawerWidth}px` : 0,
+        ml: { xs: 0, sm: sidebarOpen ? `${drawerWidth}px` : 0 },
         transition: "margin 0.3s ease",
       }}
     >

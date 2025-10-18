@@ -4,6 +4,7 @@ import { lazy } from "react";
 const Layout = lazy(() => import("./layout/Layout"));
 const ProductList = lazy(() => import("./Products/ProductList"));
 const OrderList = lazy(() => import("./Orders/OrderList"));
+const CategoryList = lazy(() => import("./Categories/CategoryList"));
 const NotFoundPage = lazy(() => import("./components/NotFound"));
 
 const router = createBrowserRouter([
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: "/orders",
         Component: OrderList,
+      },
+      {
+        path: "/categories",
+        Component: CategoryList,
       },
       {
         path: "*",
