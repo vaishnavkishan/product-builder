@@ -10,7 +10,7 @@ function NotFoundPage() {
         Oops! Page not found
       </Typography>
       <Typography variant="subtitle1">
-        The page you are looking for doesn’t exist or has been moved.
+        The page you are looking for doesn&apos;t exist or has been moved.
       </Typography>
     </Card>
   );

@@ -17,6 +17,15 @@ Developed using:
 1.  Local DB storage, the data stays in the browser
 1.  Show logo when the app is lazy loaded
 
+## Learnings
+
+1. React and MUI.
+1. MUI custom theme using [Material-UI Theme Creator](https://bareynol.github.io/mui-theme-creator/).
+1. Font and Color theory of [Materil Design - Rally](https://m2.material.io/design/material-studies/rally.html#color).
+1. In memory state management using `Redux`.
+1. Persisting state in Browser's IndexedDB using `Redux Persist` and `redux-persist-indexeddb-storage`.
+1. Lazy loading components using `lazy`.
+
 ## Deployment
 
 [Vaiki product builder](https://stproductbuilderreact.z13.web.core.windows.net/)

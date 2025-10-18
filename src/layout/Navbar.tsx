@@ -28,7 +28,7 @@ export default function Navbar({ onToggleDrawer }: NavbarProps) {
 
         {/* Logo + App Name */}
         <Typography variant="h6" sx={{ flexGrow: 0, mr: 2 }}>
-          🛒 MyStore
+          🛒 VaiKi Product Builder
         </Typography>
 
         {/* Search Bar */}
@@ -51,9 +51,11 @@ export default function Navbar({ onToggleDrawer }: NavbarProps) {
         </Box>
 
         {/* Profile/Login */}
-        <IconButton color="inherit" sx={{ ml: 2 }}>
-          <Avatar alt="User" src="" />
-        </IconButton>
+        <Box sx={{ marginLeft: "auto" }}>
+          <IconButton color="secondary">
+            <Avatar alt="User" src="" />
+          </IconButton>
+        </Box>
       </Toolbar>
     </AppBar>
   );

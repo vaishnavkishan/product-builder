@@ -6,7 +6,7 @@ const ProductList = lazy(() => import("./Products/ProductList"));
 const OrderList = lazy(() => import("./Orders/OrderList"));
 const NotFoundPage = lazy(() => import("./components/NotFound"));
 
-let router = createBrowserRouter([
+const router = createBrowserRouter([
   {
     path: "/",
     Component: Layout,
