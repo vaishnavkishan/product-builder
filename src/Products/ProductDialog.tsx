@@ -59,11 +59,7 @@ export default function ProductDialog({
   const handleSave = () => {
     if (!onSave) return;
     // Simple validation: prevent save when required fields missing
-    if (
-      !currentProduct.name ||
-      !currentProduct.categoryId ||
-      currentProduct.price < 0
-    ) {
+    if (!currentProduct.name || !currentProduct.categoryId) {
       // noop; UI shows helper text / disabled button
       return;
     }
@@ -82,10 +78,6 @@ export default function ProductDialog({
           value={currentProduct.name}
           onChange={(e) => handleChange("name", e.target.value)}
           fullWidth
-          error={!currentProduct.name}
-          helperText={
-            !currentProduct.name ? "Product name is required" : undefined
-          }
         />
         <TextField
           select
@@ -94,10 +86,6 @@ export default function ProductDialog({
           onChange={(e) => handleChange("categoryId", e.target.value)}
           fullWidth
           SelectProps={{}}
-          error={!currentProduct.categoryId}
-          helperText={
-            !currentProduct.categoryId ? "Please select a category" : undefined
-          }
         >
           {categories.map((cat: Category) => (
             <MenuItem key={cat.id} value={cat.id}>
@@ -111,10 +99,6 @@ export default function ProductDialog({
           value={currentProduct.price}
           onChange={(e) => handleChange("price", Number(e.target.value))}
           fullWidth
-          error={currentProduct.price < 0}
-          helperText={
-            currentProduct.price < 0 ? "Price must be 0 or greater" : undefined
-          }
         />
       </DialogContent>
       <DialogActions>

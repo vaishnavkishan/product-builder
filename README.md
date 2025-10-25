@@ -16,8 +16,9 @@ Access from [VaiKi](https://stproductbuilderreact.z13.web.core.windows.net/)
 
 ## Features
 
-1.  Local DB storage, the data stays in the browser
-1.  Show logo when the app is lazy loaded
+1. Local DB storage, the data stays in the browser
+1. Show logo when the app is lazy loaded using `Suspense`
+1. Show 404 page when incorrect url
 
 ## Learnings
 
