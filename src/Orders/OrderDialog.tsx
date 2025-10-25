@@ -88,7 +88,7 @@ export default function OrderDialog({
         {readOnly ? "View Order" : order ? "Edit Order" : "Create Order"}
       </DialogTitle>
       <DialogContent>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} pt={1}>
           {/* Left: Form */}
           <Grid
             size={{ xs: 12, md: 6 }}

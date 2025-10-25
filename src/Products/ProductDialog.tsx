@@ -7,6 +7,7 @@ import {
   TextField,
   MenuItem,
   Button,
+  Box,
 } from "@mui/material";
 import type { Product } from "../Types/types";
 import { useAppSelector } from "../Store/persistent";
@@ -70,36 +71,36 @@ export default function ProductDialog({
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>{product ? "Edit Product" : "Create Product"}</DialogTitle>
-      <DialogContent
-        sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}
-      >
-        <TextField
-          label="Product Name"
-          value={currentProduct.name}
-          onChange={(e) => handleChange("name", e.target.value)}
-          fullWidth
-        />
-        <TextField
-          select
-          label="Category"
-          value={currentProduct.categoryId}
-          onChange={(e) => handleChange("categoryId", e.target.value)}
-          fullWidth
-          SelectProps={{}}
-        >
-          {categories.map((cat: Category) => (
-            <MenuItem key={cat.id} value={cat.id}>
-              {cat.name}
-            </MenuItem>
-          ))}
-        </TextField>
-        <TextField
-          label="Price"
-          type="number"
-          value={currentProduct.price}
-          onChange={(e) => handleChange("price", Number(e.target.value))}
-          fullWidth
-        />
+      <DialogContent>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2, pt: 1 }}>
+          <TextField
+            label="Product Name"
+            value={currentProduct.name}
+            onChange={(e) => handleChange("name", e.target.value)}
+            fullWidth
+          />
+          <TextField
+            select
+            label="Category"
+            value={currentProduct.categoryId}
+            onChange={(e) => handleChange("categoryId", e.target.value)}
+            fullWidth
+            SelectProps={{}}
+          >
+            {categories.map((cat: Category) => (
+              <MenuItem key={cat.id} value={cat.id}>
+                {cat.name}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            label="Price"
+            type="number"
+            value={currentProduct.price}
+            onChange={(e) => handleChange("price", Number(e.target.value))}
+            fullWidth
+          />
+        </Box>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Close</Button>
