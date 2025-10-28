@@ -12,11 +12,12 @@ import {
   IconButton,
   Button,
 } from "@mui/material";
-import { Edit, Visibility } from "@mui/icons-material";
+import { Delete, Edit, Visibility } from "@mui/icons-material";
 import OrderDialog from "./OrderDialog";
-import { addOrders, updateOrders } from "../Store/GlobalStore";
+import { addOrders, removeOrders, updateOrders } from "../Store/GlobalStore";
 import type { Order } from "../Types/types";
 import { useAppDispatch, useAppSelector } from "../Store/persistent";
+import { Guid } from "guid-typescript";
 
 export default function OrderList() {
   const orders = useAppSelector((s) => s.store.globalState.orders);
@@ -45,11 +46,14 @@ export default function OrderList() {
     if (order.id) {
       dispatch(updateOrders([order])); // update existing order
     } else {
+      order.id = Guid.create().toString();
       dispatch(addOrders([order])); // add new order
     }
     setDialogOpen(false);
   };
-
+  const handleDelete = (order: Order) => {
+    dispatch(removeOrders([order.id]));
+  };
   return (
     <Box>
       {/* Header */}
@@ -78,7 +82,6 @@ export default function OrderList() {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
               <TableCell>Product</TableCell>
               <TableCell>Client</TableCell>
               <TableCell>Quantity</TableCell>
@@ -91,7 +94,6 @@ export default function OrderList() {
               const product = products.find((p) => p.id === order.productId);
               return (
                 <TableRow key={order.id}>
-                  <TableCell>{order.id}</TableCell>
                   <TableCell>{product?.name ?? "Unknown"}</TableCell>
                   <TableCell>{order.client}</TableCell>
                   <TableCell>{order.quantity}</TableCell>
@@ -102,6 +104,12 @@ export default function OrderList() {
                     </IconButton>
                     <IconButton onClick={() => handleOpenView(order)}>
                       <Visibility />
+                    </IconButton>
+                    <IconButton
+                      color="error"
+                      onClick={() => handleDelete(order)}
+                    >
+                      <Delete />
                     </IconButton>
                   </TableCell>
                 </TableRow>
@@ -129,6 +137,9 @@ export default function OrderList() {
           order={selectedOrder}
           readOnly={true}
           products={products}
+          onSave={(data) => {
+            console.log("saving:", data);
+          }}
         />
       )}
     </Box>
