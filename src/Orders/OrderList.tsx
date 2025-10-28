@@ -17,7 +17,6 @@ import {
 import {
   Delete,
   Edit,
-  Launch,
   MoreVert,
   RemoveRedEye,
   Visibility,
@@ -27,7 +26,6 @@ import { addOrders, removeOrders, updateOrders } from "../Store/GlobalStore";
 import type { Order } from "../Types/types";
 import { useAppDispatch, useAppSelector } from "../Store/persistent";
 import { Guid } from "guid-typescript";
-import { useNavigate } from "react-router-dom";
 
 export default function OrderList() {
   const orders = useAppSelector((s) => s.store.globalState.orders);
@@ -40,7 +38,6 @@ export default function OrderList() {
     undefined
   );
   const [readOnly, setReadOnly] = useState(false);
-  const navigate = useNavigate();
 
   // readOnly mode removed; view-only uses ViewProductDialog
   const [actionsAnchorEl, setActionsAnchorEl] = useState<null | HTMLElement>(
@@ -78,10 +75,6 @@ export default function OrderList() {
   ) => {
     setSelectedOrder(order);
     setActionsAnchorEl(event.currentTarget);
-  };
-
-  const handleNavigateToOrder = (order: Order) => {
-    void navigate(`/orders/${order.id}`);
   };
 
   return (
@@ -141,12 +134,6 @@ export default function OrderList() {
                         sx={{ color: (theme) => theme.palette.info.light }}
                       >
                         <Visibility />
-                      </IconButton>
-                      <IconButton
-                        sx={{ color: (theme) => theme.palette.info.light }}
-                        onClick={() => handleNavigateToOrder(order)}
-                      >
-                        <Launch />
                       </IconButton>
                       <IconButton
                         sx={{ color: (theme) => theme.palette.error.light }}
@@ -234,15 +221,6 @@ export default function OrderList() {
           sx={{ color: (theme) => theme.palette.info.light }}
         >
           <RemoveRedEye sx={{ mr: 1 }} /> Quick View
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            if (selectedOrder) handleNavigateToOrder(selectedOrder);
-            setActionsAnchorEl(null);
-          }}
-          sx={{ color: (theme) => theme.palette.info.light }}
-        >
-          <Launch sx={{ mr: 1 }} /> Open Page
         </MenuItem>
         <MenuItem
           onClick={() => {
