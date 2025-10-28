@@ -11,13 +11,23 @@ import {
   Typography,
   IconButton,
   Button,
+  Menu,
+  MenuItem,
 } from "@mui/material";
-import { Delete, Edit, Visibility } from "@mui/icons-material";
+import {
+  Delete,
+  Edit,
+  Launch,
+  MoreVert,
+  RemoveRedEye,
+  Visibility,
+} from "@mui/icons-material";
 import OrderDialog from "./OrderDialog";
 import { addOrders, removeOrders, updateOrders } from "../Store/GlobalStore";
 import type { Order } from "../Types/types";
 import { useAppDispatch, useAppSelector } from "../Store/persistent";
 import { Guid } from "guid-typescript";
+import { useNavigate } from "react-router-dom";
 
 export default function OrderList() {
   const orders = useAppSelector((s) => s.store.globalState.orders);
@@ -30,6 +40,12 @@ export default function OrderList() {
     undefined
   );
   const [readOnly, setReadOnly] = useState(false);
+  const navigate = useNavigate();
+
+  // readOnly mode removed; view-only uses ViewProductDialog
+  const [actionsAnchorEl, setActionsAnchorEl] = useState<null | HTMLElement>(
+    null
+  );
 
   const handleOpenDialog = (order?: Order, readonly = false) => {
     setSelectedOrder(order);
@@ -51,9 +67,23 @@ export default function OrderList() {
     }
     setDialogOpen(false);
   };
+
   const handleDelete = (order: Order) => {
     dispatch(removeOrders([order.id]));
   };
+
+  const handleOpenActions = (
+    event: React.MouseEvent<HTMLElement>,
+    order: Order
+  ) => {
+    setSelectedOrder(order);
+    setActionsAnchorEl(event.currentTarget);
+  };
+
+  const handleNavigateToOrder = (order: Order) => {
+    void navigate(`/orders/${order.id}`);
+  };
+
   return (
     <Box>
       {/* Header */}
@@ -99,18 +129,45 @@ export default function OrderList() {
                   <TableCell>{order.quantity}</TableCell>
                   <TableCell>{order.country}</TableCell>
                   <TableCell align="center">
-                    <IconButton onClick={() => handleOpenDialog(order, false)}>
-                      <Edit />
-                    </IconButton>
-                    <IconButton onClick={() => handleOpenView(order)}>
-                      <Visibility />
-                    </IconButton>
-                    <IconButton
-                      color="error"
-                      onClick={() => handleDelete(order)}
-                    >
-                      <Delete />
-                    </IconButton>
+                    <Box sx={{ display: { xs: "none", sm: "inline-flex" } }}>
+                      <IconButton
+                        sx={{ color: (theme) => theme.palette.primary.main }}
+                        onClick={() => handleOpenDialog(order, false)}
+                      >
+                        <Edit />
+                      </IconButton>
+                      <IconButton
+                        onClick={() => handleOpenView(order)}
+                        sx={{ color: (theme) => theme.palette.info.light }}
+                      >
+                        <Visibility />
+                      </IconButton>
+                      <IconButton
+                        sx={{ color: (theme) => theme.palette.info.light }}
+                        onClick={() => handleNavigateToOrder(order)}
+                      >
+                        <Launch />
+                      </IconButton>
+                      <IconButton
+                        sx={{ color: (theme) => theme.palette.error.light }}
+                        onClick={() => handleDelete(order)}
+                      >
+                        <Delete />
+                      </IconButton>
+                    </Box>
+                    {/* compact actions for xs: one button opens menu */}
+                    <Box sx={{ display: { xs: "inline-flex", sm: "none" } }}>
+                      <IconButton
+                        aria-label="more"
+                        aria-controls={
+                          actionsAnchorEl ? "actions-menu" : undefined
+                        }
+                        aria-haspopup="true"
+                        onClick={(e) => handleOpenActions(e, order)}
+                      >
+                        <MoreVert />
+                      </IconButton>
+                    </Box>
                   </TableCell>
                 </TableRow>
               );
@@ -142,6 +199,61 @@ export default function OrderList() {
           }}
         />
       )}
+      {/* Actions menu for xs screens */}
+      <Menu
+        id="actions-menu"
+        anchorEl={actionsAnchorEl}
+        open={Boolean(actionsAnchorEl)}
+        onClose={() => setActionsAnchorEl(null)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        PaperProps={{
+          sx: {
+            bgcolor: "background.default",
+            color: "text.primary",
+            // slightly higher elevation so it sits above table paper
+            boxShadow: (theme) => theme.shadows[8],
+            minWidth: 140,
+          },
+        }}
+      >
+        <MenuItem
+          onClick={() => {
+            if (selectedOrder) handleOpenDialog(selectedOrder);
+            setActionsAnchorEl(null);
+          }}
+          sx={{ color: (theme) => theme.palette.primary.main }}
+        >
+          <Edit sx={{ mr: 1 }} /> Edit
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            if (selectedOrder) handleOpenDialog(selectedOrder, true);
+            setActionsAnchorEl(null);
+          }}
+          sx={{ color: (theme) => theme.palette.info.light }}
+        >
+          <RemoveRedEye sx={{ mr: 1 }} /> Quick View
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            if (selectedOrder) handleNavigateToOrder(selectedOrder);
+            setActionsAnchorEl(null);
+          }}
+          sx={{ color: (theme) => theme.palette.info.light }}
+        >
+          <Launch sx={{ mr: 1 }} /> Open Page
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            if (selectedOrder) handleDelete(selectedOrder);
+            setActionsAnchorEl(null);
+          }}
+          sx={{ color: (theme) => theme.palette.error.light }}
+        >
+          <Delete sx={{ mr: 1 }} /> Delete
+        </MenuItem>
+      </Menu>
     </Box>
   );
 }

@@ -169,7 +169,7 @@ export default function OrderDialog({
           {/* Right: Product Info size={{xs:12, md:6}} */}
           <Grid size={{ xs: 12, md: 6 }}>
             <Box>
-              <Typography variant="h6" mb={1}>
+              <Typography variant="h6" color="secondary" mb={1}>
                 Product Info
               </Typography>
 

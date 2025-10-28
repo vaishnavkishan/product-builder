@@ -142,25 +142,25 @@ export default function ProductList() {
                   {/* full action buttons visible on sm+ */}
                   <Box sx={{ display: { xs: "none", sm: "inline-flex" } }}>
                     <IconButton
-                      color="primary"
+                      sx={{ color: (theme) => theme.palette.primary.main }}
                       onClick={() => handleOpenDialog(product)}
                     >
                       <Edit />
                     </IconButton>
                     <IconButton
-                      color="primary"
+                      sx={{ color: (theme) => theme.palette.info.light }}
                       onClick={() => handleViewProduct(product)}
                     >
                       <RemoveRedEye />
                     </IconButton>
                     <IconButton
-                      color="primary"
+                      sx={{ color: (theme) => theme.palette.info.light }}
                       onClick={() => handleNavigateToProduct(product)}
                     >
                       <Launch />
                     </IconButton>
                     <IconButton
-                      color="error"
+                      sx={{ color: (theme) => theme.palette.error.light }}
                       onClick={() => handleDelete(product)}
                     >
                       <Delete />
@@ -234,7 +234,7 @@ export default function ProductList() {
             if (selectedProduct) handleViewProduct(selectedProduct);
             setActionsAnchorEl(null);
           }}
-          sx={{ color: (theme) => theme.palette.info.main }}
+          sx={{ color: (theme) => theme.palette.info.light }}
         >
           <RemoveRedEye sx={{ mr: 1 }} /> Quick View
         </MenuItem>
@@ -243,7 +243,7 @@ export default function ProductList() {
             if (selectedProduct) handleNavigateToProduct(selectedProduct);
             setActionsAnchorEl(null);
           }}
-          sx={{ color: (theme) => theme.palette.secondary.main }}
+          sx={{ color: (theme) => theme.palette.info.light }}
         >
           <Launch sx={{ mr: 1 }} /> Open Page
         </MenuItem>
@@ -252,7 +252,7 @@ export default function ProductList() {
             if (selectedProduct) handleDelete(selectedProduct);
             setActionsAnchorEl(null);
           }}
-          sx={{ color: (theme) => theme.palette.error.main }}
+          sx={{ color: (theme) => theme.palette.error.light }}
         >
           <Delete sx={{ mr: 1 }} /> Delete
         </MenuItem>
